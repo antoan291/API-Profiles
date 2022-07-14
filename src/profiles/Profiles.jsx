@@ -1,13 +1,12 @@
 import React,{ useEffect,useState } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
-import ProfileUser from './ProfileUser'
-import SearchIcon from '@mui/icons-material/Search';
+
+import ProfileCards from './ProfileCards'
 
 const Container = styled.div`
     background-color:#ebebeb;
     padding: 30px;
-    
 `
 const Wrapper = styled.div`
     background-color:#ebebeb;
@@ -16,13 +15,12 @@ const Wrapper = styled.div`
     grid-template-columns: repeat(4, 1fr);
     grid-row-gap: 5rem;
     justify-items: center;
-    justify-content: center;  
+    justify-content: center; 
 `
 const SearchCont = styled.div`
     display:flex;
     justify-content:center;
     align-items:center;
-    
 `
 const Input = styled.input`
     font-size:1rem;
@@ -33,38 +31,32 @@ const Input = styled.input`
 
 const Profiles = () => {
 
-    const [users, setUser] = useState([])
+const [users, setUser] = useState([])
 
-    useEffect(() =>{
-        axios.get('https://jsonplaceholder.typicode.com/users')
-        .then(res => {
-           
-            setUser(res.data)
-        })
-        .catch(err => {
-            console.log(err)
-        })
+useEffect(() =>{
+    axios.get('https://jsonplaceholder.typicode.com/users')
+    .then(res => {
+    setUser(res.data)
     })
+    .catch(err => {
+    console.log(err)
+    })
+})
 
-  return (
-    <Container>
-        
-        <SearchCont>
-            <Input placeholder="Search" />
-            <SearchIcon style={{ color: "gray", fontSize: 30 }} />
-        </SearchCont>
+return (
+<Container>
 
-            <Wrapper>
+    <Wrapper>
 
-                {
-                    users.map((item) =>
-                            <ProfileUser item={item} key={item.id} />                              
-                            )
-                }
+        {
+        users.map((item) =>
+            <ProfileCards item={item} key={item.id} /> 
+        )
+        }
 
-            </Wrapper>
-    </Container>
-  )
+    </Wrapper>
+</Container>
+)
 }
 
 export default Profiles
