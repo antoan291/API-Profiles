@@ -14,8 +14,13 @@ import Search from './Search';
 const Profiles = () => {
 
 const [users, setUser] = useState([])
-const [searchField, setSearchField] = useState("");
 const [likes,setLikes] = useState([]);
+const [isLiked,setIsLiked] = useState(false);
+const [searchBar, setSearchBar] = useState("");
+
+    useEffect(() => {
+        getLocalLikes();
+    },[])
 
     useEffect(() => {
 
@@ -36,8 +41,18 @@ const [likes,setLikes] = useState([]);
 
     }
 
+    // Search
+     const searchProfile = (e) => {
+        setSearchBar(e.target.value);
+    }  
+
+    const filteredProfiles = users.filter( user => {
+    return  user.name.toLowerCase().includes( searchBar.toLowerCase() )
+    })
+
+    //Local Storage
     const saveLocalLikes = () => {
-        localStorage.setItem('likes', JSON.stringify(users))
+        localStorage.setItem('likes', JSON.stringify(likes))
     }
 
     const getLocalLikes = () => {
@@ -50,6 +65,8 @@ const [likes,setLikes] = useState([]);
     }
 
 
+
+
 return (
     <Box
     sx={{
@@ -60,7 +77,9 @@ return (
         {/* Search */}
             <Search
             users={users}
-            searchField={searchField}
+            searchBar={searchBar}
+            searchProfile={searchProfile}
+            setSearchBar={setSearchBar}
             />
 
         {/* Search end */}
@@ -78,7 +97,7 @@ return (
   
         
         {
-        users.map((item) => (
+        filteredProfiles.map((item) => (
         
             <ProfileCards 
             item={item} 
@@ -87,6 +106,8 @@ return (
             setUser={setUser}
             likes={likes}
             setLikes={setLikes}
+            isLiked={isLiked}
+            setIsLiked={setIsLiked}
             /> 
             )
         )

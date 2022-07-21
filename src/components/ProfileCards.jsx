@@ -12,7 +12,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
-const ProfileCards = ({ item,users,setUser,likes,setLikes }) => {
+const ProfileCards = ({ item,users,setUser,likes,setLikes,isLiked,setIsLiked }) => {
 
  
 
@@ -23,10 +23,11 @@ const ProfileCards = ({ item,users,setUser,likes,setLikes }) => {
 
 
     //Likes
-        const makeLike = (id) => {
 
-            setLikes([...likes,id]);
+        const makeLike = () => {
+            setLikes([...likes,{id:users,liked:false}]);
         }
+      
          
 
         
@@ -57,7 +58,7 @@ const ProfileCards = ({ item,users,setUser,likes,setLikes }) => {
                     <FavoriteIcon 
             
                     fontSize='large' 
-                    onClick = {() => makeLike(item.id)}
+                    onClick = {() => makeLike()}
                     
                     // onClick ={() =>setLike(prevLike => !prevLike)}
                     
