@@ -1,16 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 import logo from './logo.svg';
-import Profiles from './profiles/Profiles'
+import Profiles from './components/Profiles'
 import './App.css';
 
-class App extends Component {
-  render() {
+function App() {
     return (
       <div className="App">
         <Profiles/>
       </div>
     );
   }
-}
+
 
 export default App;
