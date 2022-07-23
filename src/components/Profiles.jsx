@@ -1,6 +1,5 @@
 import React,{ useEffect,useState } from 'react'
 import axios from 'axios'
-
 import Container from '@mui/material/Container';
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
@@ -12,31 +11,51 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Search from './Search';
 
 const Profiles = () => {
+    const [users, setUsers] = useState([])
+    const [searchBar, setSearchBar] = useState("");
 
-const [users, setUser] = useState([])
-const [likes,setLikes] = useState([]);
-const [isLiked,setIsLiked] = useState(false);
-const [searchBar, setSearchBar] = useState("");
+    //Delete Button /
+    const deleteProfile = (id) => {
+        setUsers(users.filter(el => el.id !== item.id))
+    }
+
+    //Likes
+    const makeLike = (id) => {
+        setUsers(current =>{
+            const newArray = current.map(item =>{
+                if(item.id == id){
+                    item.liked = !item.liked;
+                }
+                return item;
+            });
+            saveLocalLikes(newArray);
+
+            return newArray;
+        });        
+    }
 
     useEffect(() => {
-        getLocalLikes();
+        getUsers()
     },[])
 
-    useEffect(() => {
-
-        getUsers();
-        saveLocalLikes();
-
-    },[likes])
-
+    useEffect(()=>{
+        console.log(users);
+    },[users])
 
     const getUsers =  () => {
         axios.get('https://jsonplaceholder.typicode.com/users')
         .then(res => {
-        setUser(res.data)
+            let likesLocal = JSON.parse(localStorage.getItem('likes'));
+
+            setUsers(res.data.map((item, index) =>{
+                if(likesLocal){
+                    item.liked = likesLocal[index].liked;
+                }
+                return item;
+            }));
         })
         .catch(err => {
-        console.log(err)
+            console.log(err)
         })
 
     }
@@ -47,24 +66,16 @@ const [searchBar, setSearchBar] = useState("");
     }  
 
     const filteredProfiles = users.filter( user => {
-    return  user.name.toLowerCase().includes( searchBar.toLowerCase() )
-    })
+        return  user.name.toLowerCase().includes( searchBar.toLowerCase() )
+    });
 
     //Local Storage
-    const saveLocalLikes = () => {
-        localStorage.setItem('likes', JSON.stringify(likes))
+    const saveLocalLikes = (arrayToSave) => {
+        localStorage.setItem('likes', JSON.stringify(arrayToSave.map(item => ({
+            id: item.id, 
+            liked: item.liked
+        }))));
     }
-
-    const getLocalLikes = () => {
-        if(localStorage.getItem('likes') === null){
-            localStorage.setItem('likes',JSON.stringify([]));
-        }else{
-            let likesLocal = JSON.parse(localStorage.getItem('likes'));
-            setLikes(likesLocal);
-        }
-    }
-
-
 
 
 return (
@@ -76,10 +87,10 @@ return (
     >
         {/* Search */}
             <Search
-            users={users}
-            searchBar={searchBar}
-            searchProfile={searchProfile}
-            setSearchBar={setSearchBar}
+                users={users}
+                searchBar={searchBar}
+                searchProfile={searchProfile}
+                setSearchBar={setSearchBar}
             />
 
         {/* Search end */}
@@ -94,27 +105,17 @@ return (
         justifyContent: 'center', 
      }}
      >
-  
-        
-        {
-        filteredProfiles.map((item) => (
-        
+        {filteredProfiles.map((item) => (
             <ProfileCards 
-            item={item} 
-            key={item.id}
-            users={users} 
-            setUser={setUser}
-            likes={likes}
-            setLikes={setLikes}
-            isLiked={isLiked}
-            setIsLiked={setIsLiked}
+                item={item} 
+                key={item.id}
+                makeLike={makeLike}
+                users={users}
+                setUsers={setUsers}
             /> 
-            )
-        )
-        }
+        ))}
     </Container>
 </Box>
-)
-}
+)}
 
 export default Profiles

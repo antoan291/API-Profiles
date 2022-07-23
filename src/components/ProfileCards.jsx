@@ -1,5 +1,4 @@
 import React,{ useEffect,useState } from 'react'
-import {deleteProfile} from './Profiles'
 import axios from 'axios'
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
@@ -12,26 +11,14 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
-const ProfileCards = ({ item,users,setUser,likes,setLikes,isLiked,setIsLiked }) => {
-
- 
-
-    //Delete Button /
-        const deleteProfile = (id) => {
-            setUser(users.filter(el => el.id !== item.id))
-        }
-
-
-    //Likes
-
-        const makeLike = () => {
-            setLikes([...likes,{id:users,liked:false}]);
-        }
-      
-         
-
+const ProfileCards = ({item, makeLike, users, setUsers}) => {
         
-        return (
+      //Delete Button /
+      const deleteProfile = (id) => {
+        setUsers(users.filter(el => el.id !== item.id))
+    }
+
+    return (
         <Card sx={{ 
             maxWidth: 345,
             display:'flex',
@@ -56,14 +43,10 @@ const ProfileCards = ({ item,users,setUser,likes,setLikes,isLiked,setIsLiked }) 
                 >
                 <IconButton aria-label="Like Profile">
                     <FavoriteIcon 
-            
-                    fontSize='large' 
-                    onClick = {() => makeLike()}
-                    
-                    // onClick ={() =>setLike(prevLike => !prevLike)}
-                    
-                
-                />
+                        fontSize='large' 
+                        onClick = {() => makeLike(item.id)}
+                        style={{color: item.liked ? "red" : "gray"}}
+                    />
                 </IconButton>
 
                 <IconButton aria-label="Delete Profile">
