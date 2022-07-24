@@ -1,23 +1,15 @@
 import React,{ useEffect,useState } from 'react'
 import axios from 'axios'
 import Container from '@mui/material/Container';
-import { styled } from '@mui/material/styles';
-import Stack from '@mui/material/Stack';
 import ProfileCards from './ProfileCards'
 import Box from '@mui/material/Box';
 // search
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
 import Search from './Search';
 
 const Profiles = () => {
     const [users, setUsers] = useState([])
     const [searchBar, setSearchBar] = useState("");
 
-    //Delete Button /
-    const deleteProfile = (id) => {
-        setUsers(users.filter(el => el.id !== item.id))
-    }
 
     //Likes
     const makeLike = (id) => {
@@ -34,14 +26,9 @@ const Profiles = () => {
         });        
     }
 
-    useEffect(() => {
-        getUsers()
-    },[])
-
-    useEffect(()=>{
-        console.log(users);
-    },[users])
-
+    
+    
+    //Get Users
     const getUsers =  () => {
         axios.get('https://jsonplaceholder.typicode.com/users')
         .then(res => {
@@ -59,25 +46,30 @@ const Profiles = () => {
         })
 
     }
-
-    // Search
-     const searchProfile = (e) => {
+    
+    // Search Bar
+    const searchProfile = (e) => {
         setSearchBar(e.target.value);
     }  
-
+    
     const filteredProfiles = users.filter( user => {
-        return  user.name.toLowerCase().includes( searchBar.toLowerCase() )
+        return user.name.toLowerCase().includes(searchBar.toLowerCase() )
     });
-
-    //Local Storage
+    
+    //Save to Local Storage
     const saveLocalLikes = (arrayToSave) => {
         localStorage.setItem('likes', JSON.stringify(arrayToSave.map(item => ({
             id: item.id, 
             liked: item.liked
+
         }))));
     }
-
-
+    
+    //Use Effect
+    useEffect(() => {
+        getUsers()
+    },[])
+    
 return (
     <Box
     sx={{
