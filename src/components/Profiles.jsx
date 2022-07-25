@@ -95,6 +95,18 @@ return (
         gap: '5rem',
         justifyItems: 'center',
         justifyContent: 'center', 
+        ['@media (max-width:1400px)']: {
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+        },
+        ['@media (max-width:1000px)']: {
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+        },
+        ['@media (max-width:780px)']: {
+            display: 'grid',
+            gridTemplateColumns: 'repeat(1, 1fr)',
+        },
      }}
      >
         {filteredProfiles.map((item) => (
