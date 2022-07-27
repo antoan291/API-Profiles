@@ -31,7 +31,7 @@ const Profiles = () => {
     //Get Users
     const getUsers =  () => {
         axios.get('https://jsonplaceholder.typicode.com/users')
-        .then(res => {
+        .then(res => { 
             let likesLocal = JSON.parse(localStorage.getItem('likes'));
 
             setUsers(res.data.map((item, index) =>{
@@ -95,18 +95,18 @@ return (
         gap: '5rem',
         justifyItems: 'center',
         justifyContent: 'center', 
-        ['@media (max-width:1500px)']: {
+        ['@media (max-width:1400px)']: {
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
         },
-        ['@media (max-width:1100px)']: {
+        ['@media (max-width:1000px)']: {
             display: 'grid',
             gridTemplateColumns: 'repeat(2, 1fr)',
         },
         ['@media (max-width:780px)']: {
             display: 'grid',
             gridTemplateColumns: 'repeat(1, 1fr)',
-        }         
+        },
      }}
      >
         {filteredProfiles.map((item) => (
