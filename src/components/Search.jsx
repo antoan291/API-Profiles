@@ -1,19 +1,13 @@
-import React,{ useEffect,useState } from 'react'
-import { styled } from '@mui/material/styles';
+/* eslint-disable react/prop-types */
+/* eslint-disable react/react-in-jsx-scope */
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Autocomplete from '@mui/material/Autocomplete';
 
-const Search = ({ users,setSearchBar,searchBar,searchProfile }) => {
+// eslint-disable-next-line react/prop-types
+const Search = ({ users,searchBar,searchProfile }) => {
 
-//  const searchProfile = (e) => {
-//   setSearchBar(e.target.value);
-//  }
-//  let dataSearch = users.filter(item => {
-//   return Object.keys(item).some(key=>
-//     item[key].toString().toLowerCase().includes(filter.toString().toLowerCase())
-//     )
-//  })
+
   return (
  
     <Stack spacing={2} sx={{ 

@@ -1,125 +1,126 @@
-import React,{ useEffect,useState } from 'react'
-import axios from 'axios'
-import Container from '@mui/material/Container';
-import ProfileCards from './ProfileCards'
-import Box from '@mui/material/Box';
-// search
-import Search from './Search';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Container from "@mui/material/Container";
+import ProfileCards from "./ProfileCard";
+import Box from "@mui/material/Box";
+import Search from "./Search";
 
 const Profiles = () => {
-    const [users, setUsers] = useState([])
-    const [searchBar, setSearchBar] = useState("");
+  const [users, setUsers] = useState([]);
+  const [searchBar, setSearchBar] = useState("");
 
+  const handleLike = (id) => {
+    setUsers((current) => {
+      const newArray = current.map((profile) => {
+        if (profile.id === id) {
+          profile.liked = !profile.liked;
+        }
+        return profile;
+      });
+      saveLocalLikes(newArray);
 
-    //Likes
-    const makeLike = (id) => {
-        setUsers(current =>{
-            const newArray = current.map(item =>{
-                if(item.id == id){
-                    item.liked = !item.liked;
-                }
-                return item;
-            });
-            saveLocalLikes(newArray);
-
-            return newArray;
-        });        
-    }
-
-    
-    
-    //Get Users
-    const getUsers =  () => {
-        axios.get('https://jsonplaceholder.typicode.com/users')
-        .then(res => { 
-            let likesLocal = JSON.parse(localStorage.getItem('likes'));
-
-            setUsers(res.data.map((item, index) =>{
-                if(likesLocal){
-                    item.liked = likesLocal[index].liked;
-                }
-                return item;
-            }));
-        })
-        .catch(err => {
-            console.log(err)
-        })
-
-    }
-    
-    // Search Bar
-    const searchProfile = (e) => {
-        setSearchBar(e.target.value);
-    }  
-    
-    const filteredProfiles = users.filter( user => {
-        return user.name.toLowerCase().includes(searchBar.toLowerCase() )
+      return newArray;
     });
-    
-    //Save to Local Storage
-    const saveLocalLikes = (arrayToSave) => {
-        localStorage.setItem('likes', JSON.stringify(arrayToSave.map(item => ({
-            id: item.id, 
-            liked: item.liked
+  };
 
-        }))));
-    }
-    
-    //Use Effect
-    useEffect(() => {
-        getUsers()
-    },[])
-    
-return (
+  const getUsers = () => {
+    axios
+      .get("https://jsonplaceholder.typicode.com/users")
+      .then((res) => {
+        let likesLocal = JSON.parse(localStorage.getItem("likes"));
+
+        setUsers(
+          res.data.map((profile, index) => {
+            if (likesLocal) {
+              profile.liked = likesLocal[index].liked;
+            }
+            return profile;
+          })
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const searchProfile = (e) => {
+    setSearchBar(e.target.value);
+  };
+
+  const filteredProfiles = users.filter((user) => {
+    return user.name.toLowerCase().includes(searchBar.toLowerCase());
+  });
+
+  const saveLocalLikes = (arrayToSave) => {
+    localStorage.setItem(
+      "likes",
+      JSON.stringify(
+        arrayToSave.map((profile) => ({
+          id: profile.id,
+          liked: profile.liked,
+        }))
+      )
+    );
+  };
+
+  const deleteProfile = (id) => {
+    setUsers(users.filter((el) => el.id !== id));
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  return (
     <Box
-    sx={{
-        backgroundColor:'#ebebeb',
-        padding: '2rem',
-    }}
+      sx={{
+        backgroundColor: "#ebebeb",
+        padding: "2rem",
+      }}
     >
-        {/* Search */}
-            <Search
-                users={users}
-                searchBar={searchBar}
-                searchProfile={searchProfile}
-                setSearchBar={setSearchBar}
-            />
+      <Search
+        users={users}
+        searchBar={searchBar}
+        searchProfile={searchProfile}
+        setSearchBar={setSearchBar}
+      />
 
-        {/* Search end */}
-    <Container
-     sx={{
-        backgroundColor:'#ebebeb',
-        padding: '2rem',
-        display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
-        gap: '5rem',
-        justifyItems: 'center',
-        justifyContent: 'center', 
-        ['@media (max-width:1400px)']: {
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-        },
-        ['@media (max-width:1000px)']: {
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-        },
-        ['@media (max-width:780px)']: {
-            display: 'grid',
-            gridTemplateColumns: 'repeat(1, 1fr)',
-        },
-     }}
-     >
-        {filteredProfiles.map((item) => (
-            <ProfileCards 
-                item={item} 
-                key={item.id}
-                makeLike={makeLike}
-                users={users}
-                setUsers={setUsers}
-            /> 
+      <Container
+        sx={{
+          backgroundColor: "#ebebeb",
+          padding: "2rem",
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: "5rem",
+          justifyItems: "center",
+          justifyContent: "center",
+          ["@media (max-width:1400px)"]: {
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+          },
+          ["@media (max-width:1000px)"]: {
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+          },
+          ["@media (max-width:780px)"]: {
+            display: "grid",
+            gridTemplateColumns: "repeat(1, 1fr)",
+          },
+        }}
+      >
+        {filteredProfiles.map((profile) => (
+          <ProfileCards
+            profile={profile}
+            key={profile.id}
+            handleLike={handleLike}
+            users={users}
+            setUsers={setUsers}
+            deleteProfile={deleteProfile}
+          />
         ))}
-    </Container>
-</Box>
-)}
+      </Container>
+    </Box>
+  );
+};
 
-export default Profiles
+export default Profiles;
